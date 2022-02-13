@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.22.0)
-project(hello)
+project(hello VERSION 1.2)
 add_executable(${PROJECT_NAME} src/main.cpp)
+
+configure_file(include/HelloConfig.h.in include/HelloConfig.h)
+target_include_directories(${PROJECT_NAME}
+  PUBLIC ${PROJECT_BINARY_DIR}/include
+)
 
 option(GIT_SUBMODULE_UPDATE "Update git submodules during build" ON)
 if(GIT_SUBMODULE_UPDATE)
