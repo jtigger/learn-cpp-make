@@ -4,4 +4,5 @@ set -o pipefail
 set -o errexit
 
 cmake -B build/ \
-      -DGLFW_BUILD_DOCS=OFF
+      -DGLFW_BUILD_DOCS=OFF \
+      -DUSE_ADDER=OFF

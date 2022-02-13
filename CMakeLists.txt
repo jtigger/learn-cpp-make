@@ -2,11 +2,6 @@ cmake_minimum_required(VERSION 3.22.0)
 project(hello VERSION 1.2)
 add_executable(${PROJECT_NAME} src/main.cpp)
 
-configure_file(include/HelloConfig.h.in include/HelloConfig.h)
-target_include_directories(${PROJECT_NAME}
-  PUBLIC ${PROJECT_BINARY_DIR}/include
-)
-
 option(GIT_SUBMODULE_UPDATE "Update git submodules during build" ON)
 if(GIT_SUBMODULE_UPDATE)
   message(STATUS "🛠  Updating git submodules")
@@ -27,16 +22,18 @@ if(GIT_SUBMODULE_UPDATE)
   endif()
 endif()
 
-if(NOT EXISTS "${PROJECT_SOURCE_DIR}/lib/glfw/CMakeLists.txt")
-  message(FATAL_ERROR "🚨 requires GLFW, but unable to find ${PROJECT_SOURCE_DIR}/lib/glfw/CMakeLists.txt; Is GIT_SUBMODULE_UPDATE on?")
+option(USE_ADDER "Use custom library for adding two floats" ON)
+if(USE_ADDER)
+  add_subdirectory(lib/adder)
+  target_link_libraries(${PROJECT_NAME} adder)
 endif()
 
-add_subdirectory(lib/adder)
 add_subdirectory(lib/glfw)
+target_include_directories(${PROJECT_NAME} PUBLIC lib/glfw/include)
+target_link_libraries(${PROJECT_NAME} glfw)
 
+configure_file(include/HelloConfig.h.in include/HelloConfig.h)
 target_include_directories(${PROJECT_NAME}
-  PUBLIC lib/glfw/include
+  PUBLIC ${PROJECT_BINARY_DIR}/include
 )
-
-target_link_libraries(${PROJECT_NAME} adder glfw)
 
